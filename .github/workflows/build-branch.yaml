@@ -25,3 +25,8 @@ jobs:
         files: |
           Release/d2lootfilter.dll
           doc/ENG/item.filter
+      - name: Upload DLL
+         uses: actions/upload-artifact@v3
+          with:
+          name: d2lootfilter-dll
+          path: ./build/*.dll
