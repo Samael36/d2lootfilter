@@ -1,0 +1,32 @@
+name: Build DLL
+
+on:
+  workflow_dispatch:   # lets you trigger manually from the Actions tab
+  push:
+    branches: [ main ] # rebuild when you push changes to main
+
+jobs:
+  build:
+    runs-on: windows-latest   # GitHub provides free Windows runners
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore dependencies
+        run: nuget restore d2lootfilter.sln
+
+      - name: Build DLL
+        run: msbuild d2lootfilter.sln /p:Configuration=Release
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: d2lootfilter-dll
+          path: x86/Release/*.dll
